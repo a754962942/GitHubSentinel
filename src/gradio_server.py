@@ -20,12 +20,16 @@ def export_progress_by_date_range(repo, days):
     report, report_file_path = report_generator.generate_report_by_date_range(raw_file_path, days)  # 生成并获取报告内容及文件路径
 
     return report, report_file_path  # 返回报告内容和报告文件路径
+def getProj():
+    return list(subscription_manager.list_subscriptions())
+
 
 # 创建Gradio界面
 demo = gr.Interface(
     fn=export_progress_by_date_range,  # 指定界面调用的函数
     title="GitHubSentinel",  # 设置界面标题
     inputs=[
+        gr.Textbox(value=getProj()),
         gr.Dropdown(
             subscription_manager.list_subscriptions(), label="订阅列表", info="已订阅GitHub项目"
         ),  # 下拉菜单选择订阅的GitHub项目
@@ -36,6 +40,7 @@ demo = gr.Interface(
 )
 
 if __name__ == "__main__":
+    # getProj()
     demo.launch(share=True, server_name="0.0.0.0")  # 启动界面并设置为公共可访问
     # 可选带有用户认证的启动方式
     # demo.launch(share=True, server_name="0.0.0.0", auth=("django", "1234"))

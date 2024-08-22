@@ -6,9 +6,12 @@ from logger import LOG  # 导入日志模块
 class LLM:
     def __init__(self):
         # 创建一个OpenAI客户端实例
-        self.client = OpenAI()
+        self.client = OpenAI(
+            base_url='http://localhost:11434/v1',
+            api_key='ollama',
+        )
         # 从TXT文件加载提示信息
-        with open("prompts/report_prompt.txt", "r", encoding='utf-8') as file:
+        with open("../prompts/report_prompt.txt", "r", encoding='utf-8') as file:
             self.system_prompt = file.read()
         # 配置日志文件，当文件大小达到1MB时自动轮转，日志级别为DEBUG
         LOG.add("logs/llm_logs.log", rotation="1 MB", level="DEBUG")
@@ -35,7 +38,7 @@ class LLM:
         try:
             # 调用OpenAI GPT模型生成报告
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",  # 指定使用的模型版本
+                model="gemma2",  # 指定使用的模型版本
                 messages=messages
             )
             LOG.debug("GPT response: {}", response)
